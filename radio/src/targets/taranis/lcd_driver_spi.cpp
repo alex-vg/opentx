@@ -89,7 +89,7 @@ void lcdHardwareInit()
   LCD_DMA->HIFCR = LCD_DMA_FLAGS; // Write ones to clear bits
   LCD_DMA_Stream->CR =  DMA_SxCR_PL_0 | DMA_SxCR_MINC | DMA_SxCR_DIR_0;
   LCD_DMA_Stream->PAR = (uint32_t)&LCD_SPI->DR;
-#if LCD_W == 128
+#if defined(PCBX7)
   LCD_DMA_Stream->NDTR = LCD_W;
 #else
   LCD_DMA_Stream->M0AR = (uint32_t)displayBuf;
@@ -100,12 +100,12 @@ void lcdHardwareInit()
   NVIC_EnableIRQ(LCD_DMA_Stream_IRQn);
 }
 
-#if LCD_W == 128
+#if defined(PCBX7)
 void lcdStart()
 {
   lcdWriteCommand(0xe2); // (14) Soft reset
-  lcdWriteCommand(0xa1); // Set seg
-  lcdWriteCommand(0xc0); // Set com
+  lcdWriteCommand(0xa0); // Set seg
+  lcdWriteCommand(0xc8); // Set com
   lcdWriteCommand(0xf8); // Set booster
   lcdWriteCommand(0x00); // 5x
   lcdWriteCommand(0xa3); // Set bias=1/6
@@ -176,12 +176,12 @@ void lcdRefresh(bool wait)
     lcdInitFinish();
   }
 
-#if LCD_W == 128
+#if defined(PCBX7)
   uint8_t * p = displayBuf;
   for (uint8_t y=0; y < 8; y++, p+=LCD_W) {
     lcdWriteCommand(0x10); // Column addr 0
     lcdWriteCommand(0xB0 | y); // Page addr y
-    lcdWriteCommand(0x04);
+    //lcdWriteCommand(0x04);ÆÁÄ»Æ«ÒÆ×¢ÊÍ
     
     LCD_NCS_LOW();
     LCD_A0_HIGH();
@@ -260,7 +260,7 @@ void lcdOff()
 void lcdReset()
 {
   LCD_RST_LOW();
-#if LCD_W == 128
+#if defined(PCBX7)
   delay_ms(150);
 #else
   delay_ms(1); // Only 3 us needed according to data-sheet, we use 1 ms
@@ -328,7 +328,7 @@ void lcdSetRefVolt(uint8_t val)
     lcdInitFinish();
   }
 
-#if LCD_W != 128
+#if !defined(PCBX7)
   WAIT_FOR_DMA_END();
 #endif
   
