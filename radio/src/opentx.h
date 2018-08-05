@@ -230,7 +230,7 @@
   #include "targets/simu/simpgmspace.h"
 #else
   typedef const unsigned char pm_uchar;
-  typedef const char pm_char;
+//typedef const char pm_char;
   typedef const uint16_t pm_uint16_t;
   typedef const uint8_t pm_uint8_t;
   typedef const int16_t pm_int16_t;

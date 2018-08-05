@@ -28,5 +28,8 @@
   typedef int32_t swsrc_t;
   typedef int16_t safetych_t;
   typedef uint16_t bar_threshold_t;
+#if !defined(SIMU)
+  typedef const char pm_char;
+#endif
 
 #endif // _OTXTYPES_H_
